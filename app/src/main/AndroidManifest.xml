@@ -18,9 +18,9 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <service android:name=".BoundService">
-        </service>
+        <service android:name=".MessageService"/>
         <receiver android:name=".AlarmBroadcast" />
+        <service android:name=".CalculatorService"/>
     </application>
 
 

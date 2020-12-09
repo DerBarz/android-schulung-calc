@@ -15,15 +15,15 @@ import java.util.HashSet
 
 class MainActivity : Activity(), ButtonAction {
 
-    private var boundService: BoundService.LocalBinder? = null
+    private var calculatorService: CalculatorService.LocalBinder? = null
 
     private val connection = object : ServiceConnection {
         override fun onServiceDisconnected(name: ComponentName?) {
-            boundService = null
+            calculatorService = null
         }
 
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            boundService = (service as? BoundService.LocalBinder) ?: run {
+            calculatorService = (service as? CalculatorService.LocalBinder) ?: run {
                 unbindService(this)
                 null
             }
@@ -45,7 +45,7 @@ class MainActivity : Activity(), ButtonAction {
         findViewById<Button>(R.id.calc_layout_times).setOnClickListener { setTest("*", true) }
         findViewById<Button>(R.id.calc_layout_divide).setOnClickListener { setTest("/", true) }
 
-        bindService(Intent(this, BoundService::class.java), connection, Context.BIND_AUTO_CREATE)
+        bindService(Intent(this, CalculatorService::class.java), connection, Context.BIND_AUTO_CREATE)
     }
 
     override fun onDestroy() {
@@ -82,7 +82,7 @@ class MainActivity : Activity(), ButtonAction {
         val calculations = sharedPreferences.getStringSet("calculations", HashSet<String>())?.toMutableSet()
         val textView = findViewById<TextView>(R.id.calc_layout_text)
 
-        val result = boundService?.calculate(textView.text.toString())
+        val result = calculatorService?.calculate(textView.text.toString())
 
         textView.append(" = $result")
         calculations?.add(textView.text.toString())

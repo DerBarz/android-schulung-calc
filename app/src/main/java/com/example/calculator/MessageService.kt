@@ -8,47 +8,11 @@ import android.os.IBinder
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 
-class BoundService : Service() {
+class MessageService : Service() {
 
     private val binder = LocalBinder()
 
     private var notificationManager: NotificationManager? = null
-
-    fun calculate(expr : String): Int {
-        val calc = expr.split(' ')
-        var result = 0
-        var nextOp: Char? = null
-        calc.forEach {
-            when (it) {
-                "+", "-", "*", "/" -> {
-                    nextOp = it[0]
-                }
-                else -> {
-                    if (it != ".") {
-                        when (nextOp) {
-                            '+' -> {
-                                result += it.toInt()
-                            }
-                            '/' -> {
-                                result /= it.toInt()
-                            }
-                            '-' -> {
-                                result -= it.toInt()
-                            }
-                            '*' -> {
-                                result *= it.toInt()
-                            }
-                            else -> {
-                                result = it.toInt()
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        sendMessage(expr.plus(" = $result"))
-        return result
-    }
 
     private fun setAlarm () {
         val alarmManager = getSystemService(Activity.ALARM_SERVICE)
@@ -65,8 +29,7 @@ class BoundService : Service() {
         )
     }
 
-    private fun sendMessage(msg: String) {
-
+    fun sendMessage(msg: String) {
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 "CALC_CHANNEL_ID",
@@ -87,8 +50,8 @@ class BoundService : Service() {
     }
 
     inner class LocalBinder : Binder() {
-        fun calculate(expr : String): Int {
-            return this@BoundService.calculate(expr)
+        fun sendMessage(expr : String) {
+            return this@MessageService.sendMessage(expr)
         }
     }
 
