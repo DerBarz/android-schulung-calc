@@ -28,7 +28,6 @@ class MainActivity : Activity(), ButtonAction {
                 null
             }
         }
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,6 +46,11 @@ class MainActivity : Activity(), ButtonAction {
         findViewById<Button>(R.id.calc_layout_divide).setOnClickListener { setTest("/", true) }
 
         bindService(Intent(this, BoundService::class.java), connection, Context.BIND_AUTO_CREATE)
+    }
+
+    override fun onDestroy() {
+        unbindService(connection)
+        super.onDestroy()
     }
 
     private var lastFieldIsOperation = false
